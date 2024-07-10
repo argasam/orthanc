@@ -1,0 +1,31 @@
+{
+    "Name": "Orthanc",
+    "Storage": "/var/lib/orthanc/db",
+    "IndexDirectory": "/var/lib/orthanc/db",
+    "DicomModalities": {
+      "DummyCT": ["CTSCANNER", "127.0.0.1", 104],
+      "DummyMR": ["MRSCANNER", "127.0.0.1", 105]
+    },
+    "ServerAet": "ORTHANC",
+    "DicomServerEnabled": true,
+    "DicomPort": 4242,
+    "HttpServerEnabled": true,
+    "HttpPort": 8042,
+    "AuthenticationEnabled": true,
+    "RegisteredUsers": {
+      "orthanc": "orthanc",
+      "arga": "samosir"
+    },
+    "DatabaseBackend": "PostgreSQL",
+    "PostgreSQL": {
+      "EnableIndex": true,
+      "Host": "postgres",
+      "Port": 5432,
+      "Database": "orthanc",
+      "Username": "orthanc",
+      "Password": "orthanc"
+    },
+    "DefaultEncoding": "Latin1",
+    "SslEnabled": false
+}
+  
