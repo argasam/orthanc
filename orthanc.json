@@ -26,6 +26,9 @@
       "Password": "orthanc"
     },
     "DefaultEncoding": "Latin1",
-    "SslEnabled": false
+    "SslEnabled": false,
+    "Lua" : [
+      "/ai_trigger.lua"
+    ]
 }
   
