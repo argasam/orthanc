@@ -12,32 +12,27 @@ services:
       - orthanc-net
 
   orthanc:
-    image: jodogne/orthanc-plugins:1.12.4
-    # command: /run/secrets/  # Path to the configuration files (stored as secrets)
+    image: jodogne/orthanc-plugins
     ports:
       - 4242:4242
       - 8042:8042
-    secrets:
-      - orthanc.json
     environment:
+      # - ORTHANC_JSON_CONFIG=/etc/orthanc/orthanc.json
       - ORTHANC__DatabaseBackend=PostgreSQL
       - ORTHANC__PostgreSQL__EnableIndex=true
       - ORTHANC__PostgreSQL__Host=postgres
       - ORTHANC__PostgreSQL__Port=5432
       - ORTHANC__PostgreSQL__Database=orthanc
-      - ORTHANC__PostgreSQL__Username=orthanc
+      - ORTHANC__PostgreSQL__Username=orthanc_adm
       - ORTHANC__PostgreSQL__Password=orthanc
     volumes:
-      # - ./config:/etc/orthanc  # Mount local config directory to /etc/orthanc in the container
+      # - ./orthanc.json:/etc/orthanc/orthanc.json
       - orthanc_data:/var/lib/orthanc
     networks:
       - orthanc-net
     depends_on:
       - postgres
       
-secrets:
-  orthanc.json:
-    file: orthanc.json
 
 networks:
   orthanc-net:
