@@ -1,43 +1,47 @@
-version: '3.8'  # Secrets are only available since this version of Docker Compose
+version: "3.8"
 services:
+  orthanc-file-in-env-var:
+    image: orthancteam/orthanc
+    depends_on:
+      - postgres  # Ensure this matches the service name defined below
+    ports: ["8200:8042"]
+    environment:
+      VERBOSE_STARTUP: "true"
+      VERBOSE_ENABLED: "true" 
+      POSTGRESQL_PLUGIN_ENABLED: "true"
+      VOLVIEW_PLUGIN_ENABLED: "true"
+      OHIF_PLUGIN_ENABLED: "true"
+      ORTHANC_WEB_VIEWER_PLUGIN_ENABLED: "true"
+      STONE_WEB_VIEWER_PLUGIN_ENABLED: "true"
+      DICOM_WEB_PLUGIN_ENABLED: "true"
+      TRANSFERS_PLUGIN_ENABLED: "true"
+      PYTHON_PLUGIN_ENABLED: "true"
+      # OSIMIS_WEB_VIEWER1_PLUGIN_ENABLED: "true"
+    volumes:
+      - ./script/hello.py:/etc/orthanc/hello.py:ro
+      - ./ai_trigger.lua:/etc/orthanc/ai_trigger.lua:ro
+    secrets:
+      - orthanc.secret.json
+    networks:
+      - orthanc-net
+
   postgres:
     image: postgres:13
     environment:
       POSTGRES_DB: orthanc
-      POSTGRES_USER: orthanc
-      POSTGRES_PASSWORD: orthanc
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_pw
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - orthanc-net
 
-  orthanc:
-    image: jodogne/orthanc-plugins
-    ports:
-      - 4242:4242
-      - 8042:8042
-    environment:
-      # - ORTHANC_JSON_CONFIG=/etc/orthanc/orthanc.json
-      - ORTHANC__DatabaseBackend=PostgreSQL
-      - ORTHANC__PostgreSQL__EnableIndex=true
-      - ORTHANC__PostgreSQL__Host=postgres
-      - ORTHANC__PostgreSQL__Port=5432
-      - ORTHANC__PostgreSQL__Database=orthanc
-      - ORTHANC__PostgreSQL__Username=orthanc_adm
-      - ORTHANC__PostgreSQL__Password=orthanc
-    volumes:
-      # - ./orthanc.json:/etc/orthanc/orthanc.json
-      - orthanc_data:/var/lib/orthanc
-    networks:
-      - orthanc-net
-    depends_on:
-      - postgres
-      
-
-networks:
-  orthanc-net:
+secrets:
+    orthanc.secret.json:
+      file: orthanc.secret.json
 
 volumes:
   postgres_data:
-  orthanc_config:
-  orthanc_data:
+
+networks:
+  orthanc-net:
