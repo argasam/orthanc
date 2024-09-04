@@ -3,8 +3,10 @@ services:
   orthanc-file-in-env-var:
     image: orthancteam/orthanc
     depends_on:
-      - postgres  # Ensure this matches the service name defined below
-    ports: ["8200:8042"]
+      - postgres  
+    ports: 
+      - "8200:8042"
+      - "4242:4242"
     environment:
       VERBOSE_STARTUP: "true"
       VERBOSE_ENABLED: "true" 
@@ -16,14 +18,14 @@ services:
       DICOM_WEB_PLUGIN_ENABLED: "true"
       TRANSFERS_PLUGIN_ENABLED: "true"
       PYTHON_PLUGIN_ENABLED: "true"
-      # OSIMIS_WEB_VIEWER1_PLUGIN_ENABLED: "true"
     volumes:
-      - ./script/hello.py:/etc/orthanc/hello.py:ro
       - ./ai_trigger.lua:/etc/orthanc/ai_trigger.lua:ro
     secrets:
       - orthanc.secret.json
     networks:
       - orthanc-net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   postgres:
     image: postgres:13
